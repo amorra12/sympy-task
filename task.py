@@ -2,6 +2,8 @@ import sympy
 from typing import Dict
 from sympy import symbols, sympify, diff, SympifyError
 
+import sympy as sp
+
 # Controlla il file readme.md per i dettagli su ciascun sub-task
 
 def calcola_derivata(espressione: str, variabile: str) -> sympy.Expr:
@@ -36,6 +38,18 @@ def calcola_derivata(espressione: str, variabile: str) -> sympy.Expr:
 
 def calcola_integrale_definito(espressione: str, variabile: str, estremo_inf: float, estremo_sup: float) -> sympy.Expr:
     """Sub-task 2: Calcolare un Integrale Definito."""
+
+    # Definizione della variabile simbolica
+    var = sp.symbols(variabile)
+
+    # Conversione della stringa in espressione simbolica
+    expr = sp.sympify(espressione)
+
+    # Calcolo dell'integrale definito
+    integrale = sp.integrate(expr, (var, estremo_inf, estremo_sup))
+
+    return integrale
+
     pass
 
 def calcola_limite(espressione: str, variabile: str, punto: str) -> sympy.Expr:
@@ -52,7 +66,7 @@ def risolvi_sistema_lineare(eq1: str, eq2: str, var1: str, var2: str) -> Dict[sy
 
 def main():
     print("Sub-task 1:", calcola_derivata("exp(x)", "x"))
-    print("Sub-task 2:", calcola_integrale_definito("x**2", "x", 0, 3))
+    print("Sub-task 2:", calcola_integrale_definito("x**2", "x", 0, 1))
     print("Sub-task 3:", calcola_limite("sin(x)/x", "x", "0"))
     print("Sub-task 4:", calcola_polinomio_taylor("exp(x)", "x", 0.0, 4))
     print("Sub-task 5:", risolvi_sistema_lineare("x + y - 3", "x - y - 1", "x", "y"))
