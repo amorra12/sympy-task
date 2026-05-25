@@ -106,6 +106,27 @@ def calcola_limite(espressione: str, variabile: str, punto: str) -> sympy.Expr:
 
 def calcola_polinomio_taylor(espressione: str, variabile: str, punto: float, ordine: int) -> sympy.Expr:
     """Sub-task 4: Calcolare una Serie di Taylor."""
+
+    x = sp.Symbol(variabile)
+    f = sp.sympify(espressione)
+
+    polinomio = 0
+
+    for n in range(ordine + 1):
+        derivata = sp.diff(f, x, n)
+        derivata_val = derivata.subs(x, punto)
+        termine = (derivata_val / sp.factorial(n)) * (x - punto) ** n
+        polinomio += termine
+
+    # Espande completamente il polinomio
+    polinomio = sp.expand(polinomio)
+
+    # Riordina i termini dal grado più alto al più basso
+    polinomio = sp.Poly(polinomio, x).as_expr()
+
+    return polinomio
+
+
     pass
 
 def risolvi_sistema_lineare(eq1: str, eq2: str, var1: str, var2: str) -> Dict[sympy.Symbol, sympy.Expr]:
