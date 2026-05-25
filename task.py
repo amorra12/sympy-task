@@ -54,6 +54,54 @@ def calcola_integrale_definito(espressione: str, variabile: str, estremo_inf: fl
 
 def calcola_limite(espressione: str, variabile: str, punto: str) -> sympy.Expr:
     """Sub-task 3: Calcolare un Limite."""
+    """
+        Calcola il limite di una espressione matematica e gestisce
+        il caso in cui il limite non esiste.
+
+        Parametri:
+        espressione (str): la funzione, es. "1/x"
+        variabile (str): la variabile, es. "x"
+        punto (str): il punto, es. "0", "oo", "-oo"
+
+        Ritorna:
+        Il valore del limite oppure un messaggio esplicativo
+        """
+
+    try:
+        # 1. Variabile simbolica
+        var = sp.Symbol(variabile)
+
+        # 2. Espressione simbolica
+        expr = sp.sympify(espressione)
+
+        # 3. Punto
+        if punto == "oo":
+            punto_sym = sp.oo
+        elif punto == "-oo":
+            punto_sym = -sp.oo
+        else:
+            punto_sym = sp.sympify(punto)
+
+        # 4. Calcolo limiti destro e sinistro (utile per verificare esistenza)
+        limite_dx = sp.limit(expr, var, punto_sym, dir='+')
+        limite_sx = sp.limit(expr, var, punto_sym, dir='-')
+
+        # 5. Controllo se il limite esiste
+        if limite_dx == limite_sx:
+            # Caso: limite esistente
+            if limite_dx == sp.oo:
+                return "Il limite è +infinito"
+            elif limite_dx == -sp.oo:
+                return "Il limite è -infinito"
+            else:
+                return limite_dx
+        else:
+            # Caso: limite NON esiste
+            return f"Il limite non esiste (dx={limite_dx}, sx={limite_sx})"
+
+    except Exception as e:
+        return f"Errore nel calcolo: {e}"
+
     pass
 
 def calcola_polinomio_taylor(espressione: str, variabile: str, punto: float, ordine: int) -> sympy.Expr:
@@ -67,7 +115,7 @@ def risolvi_sistema_lineare(eq1: str, eq2: str, var1: str, var2: str) -> Dict[sy
 def main():
     print("Sub-task 1:", calcola_derivata("exp(x)", "x"))
     print("Sub-task 2:", calcola_integrale_definito("x**2", "x", 0, 1))
-    print("Sub-task 3:", calcola_limite("sin(x)/x", "x", "0"))
+    print("Sub-task 3:", calcola_limite("(x**2 - 1)/(x - 1)", "x", "1"))
     print("Sub-task 4:", calcola_polinomio_taylor("exp(x)", "x", 0.0, 4))
     print("Sub-task 5:", risolvi_sistema_lineare("x + y - 3", "x - y - 1", "x", "y"))
 
