@@ -131,6 +131,30 @@ def calcola_polinomio_taylor(espressione: str, variabile: str, punto: float, ord
 
 def risolvi_sistema_lineare(eq1: str, eq2: str, var1: str, var2: str) -> Dict[sympy.Symbol, sympy.Expr]:
     """Sub-task 5: Risolvere un Sistema Lineare."""
+    # Definizione dei simboli
+    x = sp.Symbol(var1)
+    y = sp.Symbol(var2)
+
+    # Conversione delle stringhe in espressioni SymPy
+    expr1 = sp.sympify(eq1)
+    expr2 = sp.sympify(eq2)
+
+    # Risoluzione con linsolve
+    sol_set = sp.linsolve([expr1, expr2], (x, y))
+
+    # Analisi del risultato
+    if not sol_set:
+        return {"errore": "Nessuna soluzione"}
+
+    soluzione = list(sol_set)[0]
+
+    # Controllo infinito soluzioni (parametri liberi)
+    if any(s.has(sp.Symbol) for s in soluzione):
+        return {"errore": "Infinite soluzioni"}
+
+    # Costruzione dizionario finale
+    return {x: soluzione[0], y: soluzione[1]}
+
     pass
 
 def main():
@@ -138,7 +162,7 @@ def main():
     print("Sub-task 2:", calcola_integrale_definito("x**2", "x", 0, 1))
     print("Sub-task 3:", calcola_limite("(x**2 - 1)/(x - 1)", "x", "1"))
     print("Sub-task 4:", calcola_polinomio_taylor("exp(x)", "x", 0.0, 4))
-    print("Sub-task 5:", risolvi_sistema_lineare("x + y - 3", "x - y - 1", "x", "y"))
+    print("Sub-task 5:", risolvi_sistema_lineare("2*x + y - 5", "x + 3*y - 5", "x", "y"))
 
 if __name__ == "__main__":
     main()
